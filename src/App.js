@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useEffect } from "react";
+import ActiveChoice from "./Components/ActiveChoice";
+
+import "./App.css";
+import { AppContext } from "./context/Context";
+import Controls from "./Components/Controls";
+import Loader from "./UI/Loader";
+import Paginator from "./UI/Paginator";
+import MyTable from "./Components/Table/Table";
 
 function App() {
+  const {
+    isLoading,
+    getData,
+    bigData,
+    content,
+    lastItemIndex,
+    firstItemIndex,
+    search,
+    error,
+  } = useContext(AppContext);
+
+  useEffect(() => {
+    getData(bigData);
+  }, [bigData]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <Controls />
+          <MyTable
+            content={search(content).slice(firstItemIndex, lastItemIndex)}
+          />
+          <Paginator />
+          <ActiveChoice />
+        </>
+      )}
     </div>
   );
 }
